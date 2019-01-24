@@ -20,7 +20,7 @@ public class Main {
 			final ActorRef comedyMoviesPublisherActor = system.actorOf(ComedyMoviesPublisherActor.props(), "comedy-movies-publisher-actor");
 			final ActorRef moviesActor = system.actorOf(MoviesActor.props(comedyMoviesPublisherActor), "movies-actor");
 			final ActorRef titlesActor = system.actorOf(TitlesActor.props(TITLES_FILE_URL, new GZipReader(), moviesActor), "titles-actor");
-			titlesActor.tell(Msg.START_READING, ActorRef.noSender());
+			titlesActor.tell(Msg.START_EXTRACTING_TITLES, ActorRef.noSender());
 
 			System.out.println(">>> Press ENTER to exit <<<");
 			System.in.read();

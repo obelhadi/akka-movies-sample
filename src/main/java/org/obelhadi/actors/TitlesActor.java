@@ -5,21 +5,15 @@ import java.util.Optional;
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
 import akka.actor.Props;
+import akka.event.Logging;
+import akka.event.LoggingAdapter;
 import org.obelhadi.events.FoundMovie;
 import org.obelhadi.model.Title;
 import org.obelhadi.utils.GZipReader;
 
 public class TitlesActor extends AbstractActor {
 
-
-	public static Props props(String gzFileUrl, GZipReader gZipReader, ActorRef moviesActor) {
-		return Props.create(TitlesActor.class, () -> new TitlesActor(gzFileUrl, moviesActor, gZipReader));
-	}
-
-	public enum Msg {
-		START_READING
-	}
-
+	private LoggingAdapter log = Logging.getLogger(getContext().getSystem(), this);
 
 	private final String gzFileUrl;
 
@@ -27,8 +21,16 @@ public class TitlesActor extends AbstractActor {
 
 	private final GZipReader gZipReader;
 
+	public static Props props(String gzFileUrl, GZipReader gZipReader, ActorRef moviesActor) {
+		return Props.create(TitlesActor.class, () -> new TitlesActor(gzFileUrl, moviesActor, gZipReader));
+	}
 
-	public TitlesActor(String gzFileUrl, ActorRef moviesActor, GZipReader gZipReader) {
+	public enum Msg {
+		START_EXTRACTING_TITLES
+	}
+
+
+	private TitlesActor(String gzFileUrl, ActorRef moviesActor, GZipReader gZipReader) {
 		this.gzFileUrl = gzFileUrl;
 		this.moviesActor = moviesActor;
 		this.gZipReader = gZipReader;
@@ -38,8 +40,8 @@ public class TitlesActor extends AbstractActor {
 	@Override
 	public Receive createReceive() {
 		return receiveBuilder()
-				.matchEquals(Msg.START_READING, msg -> {
-					System.out.println("Start Reading " + gzFileUrl);
+				.matchEquals(Msg.START_EXTRACTING_TITLES, msg -> {
+					log.info("Start Reading & Extracting titles from file : {} ", gzFileUrl);
 					gZipReader.readGzipFile(gzFileUrl)
 							.map(Title::fromTsvLine)
 							.filter(Optional::isPresent)

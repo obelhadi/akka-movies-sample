@@ -8,7 +8,7 @@ import org.obelhadi.events.PublishComedyMovie;
 
 public class MoviesActor extends AbstractActor {
 
-	public MoviesActor(ActorRef comedyMoviesPublisherActor) {
+	private MoviesActor(ActorRef comedyMoviesPublisherActor) {
 		this.comedyMoviesPublisherActor = comedyMoviesPublisherActor;
 	}
 
