@@ -27,3 +27,5 @@ RabbitMQ will be run as daemon and you can check the management UI on url : [htt
  mvn clean package exec:exec
  ```
  Or simply execute the _Main.java_ from your IDE
+ 
+ The comedy movies' titles will be published on the RMQ queue : **movies.comedy** using JSON format. you can use RMQ management UI to see the published messages
